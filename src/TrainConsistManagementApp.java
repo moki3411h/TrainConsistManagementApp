@@ -1,45 +1,55 @@
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
-    // Goods Bogie model
-    static class GoodsBogie {
-        String type;
-        String cargo;
+    static class Bogie {
+        String name;
+        int capacity;
 
-        GoodsBogie(String type, String cargo) {
-            this.type = type;
-            this.cargo = cargo;
+        Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
         }
     }
 
     public static void main(String[] args) {
 
-        System.out.println("===========================================");
-        System.out.println("UC12 - Safety Compliance Check for Goods Bogies");
-        System.out.println("===========================================\n");
+        System.out.println("==================================");
+        System.out.println("UC9 - Group Bogies by Type");
+        System.out.println("==================================\n");
 
-        // Create goods bogie list
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        List<Bogie> bogies = new ArrayList<>();
 
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Open", "Coal"));
-        goodsBogies.add(new GoodsBogie("Box", "Grain"));
-        // Try changing Petroleum → Coal to test failure
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("Sleeper", 70));
+        bogies.add(new Bogie("AC Chair", 60));
 
-        // Safety validation using stream + allMatch
-        boolean isSafe = goodsBogies.stream()
-                .allMatch(bogie ->
-                        !bogie.type.equalsIgnoreCase("Cylindrical") ||
-                                bogie.cargo.equalsIgnoreCase("Petroleum")
-                );
-
-        // Output result
-        if (isSafe) {
-            System.out.println("✅ Train is SAFE and compliant.");
-        } else {
-            System.out.println("❌ Train is NOT SAFE due to rule violation.");
+        System.out.println("All Bogies:");
+        for (Bogie b : bogies) {
+            System.out.println(b.name + " -> " + b.capacity);
         }
+
+        // Group using Collectors.groupingBy
+        Map<String, List<Bogie>> grouped =
+                bogies.stream()
+                        .collect(Collectors.groupingBy(b -> b.name));
+
+        System.out.println("\nGrouped Bogies:\n");
+
+        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+
+            System.out.println("Bogie Type: " + entry.getKey());
+
+            for (Bogie b : entry.getValue()) {
+                System.out.println("Capacity -> " + b.capacity);
+            }
+
+            System.out.println();
+        }
+
+        System.out.println("UC9 grouping completed...");
     }
 }
