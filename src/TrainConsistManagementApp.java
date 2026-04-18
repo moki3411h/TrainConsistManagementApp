@@ -1,38 +1,41 @@
+import java.util.*;
+import java.util.stream.*;
+
 public class TrainConsistManagementApp {
+
+    // Bogie class
+    static class Bogie {
+        String type;
+        int capacity;
+
+        Bogie(String type, int capacity) {
+            this.type = type;
+            this.capacity = capacity;
+        }
+    }
 
     public static void main(String[] args) {
 
         System.out.println("===========================================");
-        System.out.println("UC20 - Prevent Search on Empty Train");
+        System.out.println("UC10 - Total Seating Capacity using Streams");
         System.out.println("===========================================\n");
 
-        // Empty bogie list (simulate no data)
-        String[] bogieIds = {};
+        // Create list of bogies
+        List<Bogie> bogies = new ArrayList<>();
 
-        // Search key
-        String searchKey = "BG309";
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 48));
+        bogies.add(new Bogie("General", 90));
 
-        // Defensive check (FAIL-FAST)
-        if (bogieIds.length == 0) {
-            throw new IllegalStateException("No bogies available in train. Cannot perform search.");
-        }
+        // Stream + map + reduce
+        int totalCapacity = bogies.stream()
+                .map(b -> b.capacity)           // extract capacity
+                .reduce(0, Integer::sum);      // sum all values
 
-        // (This part will not execute if empty)
-        boolean found = false;
+        // Output
+        System.out.println("Total Seating Capacity: " + totalCapacity);
 
-        for (String id : bogieIds) {
-            if (id.equals(searchKey)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (found) {
-            System.out.println("Bogie " + searchKey + " found.");
-        } else {
-            System.out.println("Bogie " + searchKey + " NOT found.");
-        }
-
-        System.out.println("\nUC20 completed...");
+        System.out.println("\nUC10 aggregation completed...");
     }
 }
