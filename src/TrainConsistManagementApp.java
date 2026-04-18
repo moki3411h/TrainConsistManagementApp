@@ -1,55 +1,53 @@
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        String name;
-        int capacity;
-
-        Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
-        }
-    }
-
     public static void main(String[] args) {
 
-        System.out.println("==================================");
-        System.out.println("UC9 - Group Bogies by Type");
-        System.out.println("==================================\n");
+        System.out.println("===========================================");
+        System.out.println("UC19 - Binary Search for Bogie ID");
+        System.out.println("===========================================\n");
 
-        List<Bogie> bogies = new ArrayList<>();
+        // Sorted bogie IDs (IMPORTANT for binary search)
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
-        bogies.add(new Bogie("AC Chair", 60));
-
-        System.out.println("All Bogies:");
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
+        // Print available IDs
+        System.out.println("Available Bogie IDs:");
+        for (String id : bogieIds) {
+            System.out.println(id);
         }
 
-        // Group using Collectors.groupingBy
-        Map<String, List<Bogie>> grouped =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(b -> b.name));
+        // Search key
+        String searchKey = "BG309";
 
-        System.out.println("\nGrouped Bogies:\n");
+        // Binary Search
+        int low = 0;
+        int high = bogieIds.length - 1;
+        boolean found = false;
 
-        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+        while (low <= high) {
 
-            System.out.println("Bogie Type: " + entry.getKey());
+            int mid = (low + high) / 2;
 
-            for (Bogie b : entry.getValue()) {
-                System.out.println("Capacity -> " + b.capacity);
+            int comparison = searchKey.compareTo(bogieIds[mid]);
+
+            if (comparison == 0) {
+                found = true;
+                break;
+            } else if (comparison > 0) {
+                low = mid + 1;   // search right half
+            } else {
+                high = mid - 1;  // search left half
             }
-
-            System.out.println();
         }
 
-        System.out.println("UC9 grouping completed...");
+        // Output result
+        if (found) {
+            System.out.println("\nBogie " + searchKey + " found using Binary Search.");
+        } else {
+            System.out.println("\nBogie " + searchKey + " NOT found.");
+        }
+
+        System.out.println("\nUC19 search completed...");
     }
 }
