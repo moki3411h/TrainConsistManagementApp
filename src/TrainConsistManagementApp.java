@@ -1,55 +1,64 @@
-import java.util.*;
-import java.util.stream.Collectors;
-
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        String name;
-        int capacity;
-
-        Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
+    // ==============================
+    // Custom Runtime Exception
+    // ==============================
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
+            super(message);
         }
     }
 
+    // ==============================
+    // Goods Bogie Class
+    // ==============================
+    static class GoodsBogie {
+        String type;
+        String cargo;
+
+        GoodsBogie(String type) {
+            this.type = type;
+        }
+
+        // Method to assign cargo safely
+        void assignCargo(String cargo) {
+            try {
+                // Rule: Rectangular cannot carry Petroleum
+                if (type.equalsIgnoreCase("Rectangular") &&
+                        cargo.equalsIgnoreCase("Petroleum")) {
+
+                    throw new CargoSafetyException("Unsafe cargo assignment!");
+                }
+
+                this.cargo = cargo;
+                System.out.println("Cargo assigned successfully -> " + cargo);
+
+            } catch (CargoSafetyException e) {
+                System.out.println("Error: " + e.getMessage());
+
+            } finally {
+                System.out.println("Cargo validation completed for " + type + " bogie\n");
+            }
+        }
+    }
+
+    // ==============================
+    // MAIN METHOD
+    // ==============================
     public static void main(String[] args) {
 
-        System.out.println("==================================");
-        System.out.println("UC9 - Group Bogies by Type");
-        System.out.println("==================================\n");
+        System.out.println("===========================================");
+        System.out.println("UC15 - Safe Cargo Assignment");
+        System.out.println("===========================================\n");
 
-        List<Bogie> bogies = new ArrayList<>();
+        // Safe case
+        GoodsBogie b1 = new GoodsBogie("Cylindrical");
+        b1.assignCargo("Petroleum");
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
-        bogies.add(new Bogie("AC Chair", 60));
+        // Unsafe case
+        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        b2.assignCargo("Petroleum");
 
-        System.out.println("All Bogies:");
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
-        }
-
-        // Group using Collectors.groupingBy
-        Map<String, List<Bogie>> grouped =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(b -> b.name));
-
-        System.out.println("\nGrouped Bogies:\n");
-
-        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
-
-            System.out.println("Bogie Type: " + entry.getKey());
-
-            for (Bogie b : entry.getValue()) {
-                System.out.println("Capacity -> " + b.capacity);
-            }
-
-            System.out.println();
-        }
-
-        System.out.println("UC9 grouping completed...");
+        System.out.println("UC15 runtime handling completed...");
     }
 }
