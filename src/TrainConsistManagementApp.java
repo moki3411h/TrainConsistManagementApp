@@ -1,38 +1,42 @@
+import java.util.regex.*;
+
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
         System.out.println("===========================================");
-        System.out.println("UC20 - Prevent Search on Empty Train");
+        System.out.println("UC11 - Regex Validation for Train ID & Cargo Code");
         System.out.println("===========================================\n");
 
-        // Empty bogie list (simulate no data)
-        String[] bogieIds = {};
+        // Sample inputs (you can change these)
+        String trainId = "TRN-1234";
+        String cargoCode = "PET-AB";
 
-        // Search key
-        String searchKey = "BG309";
+        // Regex patterns
+        String trainPattern = "TRN-\\d{4}";
+        String cargoPattern = "PET-[A-Z]{2}";
 
-        // Defensive check (FAIL-FAST)
-        if (bogieIds.length == 0) {
-            throw new IllegalStateException("No bogies available in train. Cannot perform search.");
-        }
+        // Compile patterns
+        Pattern p1 = Pattern.compile(trainPattern);
+        Pattern p2 = Pattern.compile(cargoPattern);
 
-        // (This part will not execute if empty)
-        boolean found = false;
+        // Match inputs
+        Matcher m1 = p1.matcher(trainId);
+        Matcher m2 = p2.matcher(cargoCode);
 
-        for (String id : bogieIds) {
-            if (id.equals(searchKey)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (found) {
-            System.out.println("Bogie " + searchKey + " found.");
+        // Validate
+        if (m1.matches()) {
+            System.out.println("Train ID is valid: " + trainId);
         } else {
-            System.out.println("Bogie " + searchKey + " NOT found.");
+            System.out.println("Invalid Train ID: " + trainId);
         }
 
-        System.out.println("\nUC20 completed...");
+        if (m2.matches()) {
+            System.out.println("Cargo Code is valid: " + cargoCode);
+        } else {
+            System.out.println("Invalid Cargo Code: " + cargoCode);
+        }
+
+        System.out.println("\nUC11 validation completed...");
     }
 }
