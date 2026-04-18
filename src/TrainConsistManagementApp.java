@@ -1,55 +1,40 @@
-import java.util.*;
-import java.util.stream.Collectors;
-
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        String name;
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
+    static class PassengerBogie {
+        String type;
         int capacity;
 
-        Bogie(String name, int capacity) {
-            this.name = name;
+        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
+            this.type = type;
             this.capacity = capacity;
         }
     }
 
     public static void main(String[] args) {
 
-        System.out.println("==================================");
-        System.out.println("UC9 - Group Bogies by Type");
-        System.out.println("==================================\n");
+        System.out.println("===========================================");
+        System.out.println("UC14 - Handle Invalid Bogie Capacity");
+        System.out.println("===========================================\n");
 
-        List<Bogie> bogies = new ArrayList<>();
+        try {
+            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Created Bogie: " + b1.type + " -> " + b1.capacity);
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
-        bogies.add(new Bogie("AC Chair", 60));
+            PassengerBogie b2 = new PassengerBogie("AC Chair", 0);
 
-        System.out.println("All Bogies:");
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // Group using Collectors.groupingBy
-        Map<String, List<Bogie>> grouped =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(b -> b.name));
-
-        System.out.println("\nGrouped Bogies:\n");
-
-        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
-
-            System.out.println("Bogie Type: " + entry.getKey());
-
-            for (Bogie b : entry.getValue()) {
-                System.out.println("Capacity -> " + b.capacity);
-            }
-
-            System.out.println();
-        }
-
-        System.out.println("UC9 grouping completed...");
+        System.out.println("\nUC14 exception handling completed...");
     }
 }
